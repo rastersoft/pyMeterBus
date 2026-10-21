@@ -10,6 +10,7 @@ except ImportError:
     import sys
     sys.path.append('../')
     import meterbus
+    import meterbus_emulator
 
 
 def ping_address(ser, address, retries=5, read_echo=False):
@@ -84,6 +85,11 @@ def mbus_probe_secondary_address(ser, mask, read_echo=False):
 
 def main(args):
     try:
+        if args.device.ends_with(".yaml"):
+            obj = meterbus_emulator.BusEmulator
+        else:
+            obj = serial.serial_for_url
+
         with serial.serial_for_url(args.device,
                            args.baudrate, 8, 'E', 1, timeout=1) as ser:
 
